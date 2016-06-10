@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,4 +20,18 @@
         android:textSize="30sp"
         android:layout_height="wrap_content" />
 
+    <View style="@style/LineStyle"/>
+
+    <me.liujia95.views.ui.view._03_TopBar
+        android:layout_width="match_parent"
+        app:mleftBackground="@android:color/holo_blue_light"
+        app:mleftText="Back"
+        app:mleftTextColor="#ffffff"
+        app:mrightBackground="@android:color/holo_blue_light"
+        app:mrightTextColor="#ffffff"
+        app:mrightText="MORE"
+        app:mtitle="自定义标题"
+        app:mtitleTextColor="#123412"
+        app:mtitleTextSize="15sp"
+        android:layout_height="40dp" />
 </LinearLayout>
