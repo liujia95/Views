@@ -27,6 +27,9 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         for (int i = 0; i<itemArray.length;i++){
             mDatas.add(itemArray[i]);
         }
+
+
+        
     }
 
     @Override
