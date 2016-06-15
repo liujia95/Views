@@ -38,18 +38,13 @@ public class _01_View extends TextView{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0,0,getMeasuredWidth(),getMeasuredHeight(),mPaint1);
-
         //绘制内层矩形
         canvas.drawRect(10,10,getMeasuredWidth()-10,getMeasuredHeight()-10,mPaint2);
-
         canvas.save();
-
         //绘制文字前平移10像素
         canvas.translate(10,10);
-
         //在回调父方法前，实现自己的逻辑，对TextView来说就是在绘制文本内容前
         super.onDraw(canvas);
-
         canvas.restore();
     }
 }

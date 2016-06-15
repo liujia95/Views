@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <View style="@style/LineStyle"/>
+    <!--<View style="@style/LineStyle"/>
 
     <me.liujia95.views.ui.view._01_View
         android:layout_width="wrap_content"
@@ -34,4 +35,32 @@
         app:mtitleTextColor="#123412"
         app:mtitleTextSize="15sp"
         android:layout_height="40dp" />
+
+    <View style="@style/LineStyle"/>
+
+    <me.liujia95.views.ui.view._04_View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
+    <!--<me.liujia95.views.ui.view._05_View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
+    <me.liujia95.views.ui.view._06_ViewGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_light" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_light" />
+    </me.liujia95.views.ui.view._06_ViewGroup>
 </LinearLayout>
