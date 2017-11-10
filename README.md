@@ -1,2 +1,2 @@
 # Views
-我写过的自定义View合集
+![](D:\android_code\Views\gif\1.gif)
