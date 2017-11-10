@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Views</string>
+
+    <array name="views_name">
+        <item>六边形动画控件</item>
+    </array>
 </resources>
