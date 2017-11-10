@@ -1,2 +1,2 @@
 # Views
-我写过的自定义View合集
+![](https://github.com/liujia95/Views/blob/master/gif/1.gif)
