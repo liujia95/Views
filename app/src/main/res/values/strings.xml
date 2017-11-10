@@ -1,8 +1,3 @@
 <resources>
     <string name="app_name">Views</string>
-
-    <array name="item_array">
-        <item>《Android群英传》第三章</item>
-
-    </array>
 </resources>
