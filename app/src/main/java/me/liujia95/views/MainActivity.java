@@ -19,12 +19,11 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
 
     private List<Integer> viewsLayout = new ArrayList<>();
-    String[] viewsName;
 
     {
-        viewsName = getResources().getStringArray(R.array.views_name);
 
         viewsLayout.add(R.layout.view_hexagon);
+        viewsLayout.add(R.layout.layout_calendar);
     }
 
     @Override
@@ -46,11 +45,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        String[] datas;
+        String[] viewsName;
         View view;
         OnItemClickListener listener;
 
         public MyAdapter() {
+            viewsName = getResources().getStringArray(R.array.views_name);
             view = LayoutInflater.from(MainActivity.this).inflate(android.R.layout.simple_list_item_1, null, false);
         }
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
-            holder.setData(datas[position]);
+            holder.setData(viewsName[position]);
             holder.tv1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return datas.length;
+            return viewsName.length;
         }
 
         public void setOnItemClickListener(OnItemClickListener listener) {
