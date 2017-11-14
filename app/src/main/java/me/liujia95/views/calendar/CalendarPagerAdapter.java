@@ -1,7 +1,6 @@
 package me.liujia95.views.calendar;
 
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,7 +15,7 @@ public class CalendarPagerAdapter extends PagerAdapter {
 
     private static final String TAG = CalendarPagerAdapter.class.getSimpleName();
     //最初的数目
-    private int initCount = Integer.MAX_VALUE / 2;
+    private int flagCount = Integer.MAX_VALUE / 2;
     Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -31,14 +30,13 @@ public class CalendarPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
         MonthView monthView = new MonthView(container.getContext());
         monthView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        int offset = position - initCount;
+        int offset = position - flagCount;
         calendar.add(Calendar.MONTH, offset);
-        Log.e(TAG, "offset:" + offset + "");
         monthView.setDate(calendar.getTime());
-
+        flagCount = position;
+        monthView.setOnClickListener(listener);
         container.addView(monthView);
         return monthView;
     }
@@ -46,5 +44,11 @@ public class CalendarPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+
+    MonthView.OnClickListener listener;
+
+    public void setOnClickListener(MonthView.OnClickListener listener) {
+        this.listener = listener;
     }
 }
