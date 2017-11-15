@@ -28,14 +28,12 @@ public class MonthView extends View {
     private Paint paintTextBlack;
     private Paint paintTextGray;
     private Paint paintCircle;
-    private Paint paintToday;
 
-    private Calendar calendar;
     private Date date;
     private float density;
 
     //当前选中的数字
-    private static int currentSelectedCount;
+    public static int currentSelectedCount;
 
     static {
         Calendar calendar = Calendar.getInstance();
@@ -52,7 +50,6 @@ public class MonthView extends View {
 
     public MonthView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        calendar = Calendar.getInstance();
         paintTextBlack = new Paint();
         density = getResources().getDisplayMetrics().density;
         paintTextBlack.setTextSize(16 * density);
@@ -68,6 +65,8 @@ public class MonthView extends View {
         paintCircle.setColor(Color.GRAY);
 
         radius = density * 20;
+        //初始化的时候刷新一次
+        refreshOfChenged = true;
     }
 
     public void setDate(Date date) {
@@ -86,14 +85,13 @@ public class MonthView extends View {
         super.onDraw(canvas);
         int height = getHeight();//高度固定
         int width = getWidth();//宽度固定
-
+        //
         int monthCount = DateUtils.getDaysOfMonth(date);
-        int weekOfFirstDay = DateUtils.getWeekOfFirstDay(date) - 1;//因为国外周日是第一位所以-1
+        //因为国外周日是第一位所以-1
+        int weekOfFirstDay = DateUtils.getWeekOfFirstDay(date) - 1;
         int lastMonthCount = DateUtils.getLastMonthToDays(date);
-        Log.e(TAG, "monthCount:" + monthCount + " weekOfFirstDay:" + weekOfFirstDay + "  lastMonthCount:" + lastMonthCount);
-
-        int rowCount = (int) Math.ceil((monthCount + weekOfFirstDay) / 7.0f);//(当月数+当月1号对应的周到周日之间的数)/7
-
+        //(当月数+当月1号对应的周到周日之间的数)/7
+        int rowCount = (int) Math.ceil((monthCount + weekOfFirstDay) / 7.0f);
         //一个格子的宽度和高度
         int pieceWidth = width / 7;
         int pieceHeight = height / rowCount;
@@ -115,16 +113,19 @@ public class MonthView extends View {
                 if (lastCount < lastMonthCount) {
                     lastCount++;
                     drawText(canvas, paintTextGray, String.valueOf(lastCount), line, row, pieceWidth, pieceHeight);
-                    if (rect.contains(pointClick.x, pointClick.y) && click) {
+                    //点击引发的刷新并且在矩阵范围内
+                    if (refreshOfClicked && rect.contains(pointClick.x, pointClick.y)) {
                         currentSelectedCount = lastCount;
-                        invalidate();
                         listener.clickLastMonth(lastCount);
                     }
                 } else if (count < monthCount) {
                     count++;
+                    Log.e(TAG, "rect.contains(pointClick.x, pointClick.y):" + (rect.contains(pointClick.x, pointClick.y)));
                     Log.e(TAG, "isDrawCircle:" + isDrawCircle + "  currentSelectedCount:" + currentSelectedCount + "  count:" + count);
-                    if ((rect.contains(pointClick.x, pointClick.y) ||
-                            (currentSelectedCount == count && !click)) && !isDrawCircle) {
+                    //点击引发的刷新并且在矩阵范围内
+                    //画圈
+                    if ((refreshOfClicked && rect.contains(pointClick.x, pointClick.y)) ||
+                            (refreshOfChenged && currentSelectedCount == count)) {
                         currentSelectedCount = count;
                         isDrawCircle = true;
                         if (isToday(count)) {
@@ -138,6 +139,7 @@ public class MonthView extends View {
                         }
                         canvas.drawCircle(left + pieceWidth / 2, top + pieceHeight / 2, radius, paintCircle);
                     }
+                    //画字
                     if (isToday(count)) {
                         paintTextBlack.setColor(isClickToday ? Color.WHITE : Color.GREEN);
                     } else {
@@ -147,17 +149,17 @@ public class MonthView extends View {
                 } else {
                     nextCount++;
                     drawText(canvas, paintTextGray, String.valueOf(nextCount), line, row, pieceWidth, pieceHeight);
-                    if (rect.contains(pointClick.x, pointClick.y) && click) {
+                    //点击引发的刷新并且在矩阵范围内
+                    if (refreshOfClicked && rect.contains(pointClick.x, pointClick.y)) {
                         currentSelectedCount = nextCount;
-                        invalidate();
                         listener.clickNextMonth(nextCount);
                     }
                 }
             }
         }
-
-        //完整走了一遍重绘后关闭点击响应
-        click = false;
+        //完整走了一遍重置
+        refreshOfClicked = false;
+        refreshOfChenged = false;
     }
 
     private void drawText(Canvas canvas, Paint paint, String text, int line, int row, int pieceWidth, int pieceHeight) {
@@ -188,7 +190,10 @@ public class MonthView extends View {
     float downY;
     float radius;
     Point pointClick = new Point(-1, -1);
-    boolean click;
+    boolean refreshOfClicked;//是点击刷新
+    boolean refreshOfChenged;//是切换刷新
+
+    float moveFlagY;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -198,6 +203,15 @@ public class MonthView extends View {
                 downX = event.getX();
                 downY = event.getY();
                 downTime = System.currentTimeMillis();
+                moveFlagY = downY;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float moveY = event.getY();
+                float rawY = event.getRawY();
+                Log.e(TAG, "rawY:" + rawY);
+                Log.e(TAG, "moveY:" + moveY);
+                Log.e(TAG, "moveY-downY:" + (moveY - downY));
+
                 break;
             case MotionEvent.ACTION_UP:
                 int upX = (int) event.getX();
@@ -208,7 +222,7 @@ public class MonthView extends View {
                 long offsetTime = System.currentTimeMillis() - downTime;
                 if (offsetTime < 1000 && offsetX < 10 && offsetY < 10) {
                     pointClick.set(upX, upY);
-                    click = true;
+                    refreshOfClicked = true;
                     invalidate();
                 }
                 break;
@@ -229,5 +243,19 @@ public class MonthView extends View {
 
         void clickNextMonth(int day);
     }
+
+    /**
+     * 这个方法是受ViewPager滑动控制的，ViewPager每滑动结束一次，
+     * 都要刷新一次界面，选中合理的数字。
+     */
+    public void setCurrentSelectedCount() {
+        int days = DateUtils.getDaysOfMonth(date);
+        if (currentSelectedCount > days) {
+            currentSelectedCount = days;
+        }
+        refreshOfChenged = true;
+        invalidate();
+    }
+
 
 }

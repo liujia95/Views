@@ -17,7 +17,6 @@ import java.util.Calendar;
 
 public class CalendarLayout extends LinearLayout {
     private static final String TAG = CalendarLayout.class.getSimpleName();
-    private ViewPager viewPager;
     private CalendarPagerAdapter adapter;
     Calendar calendar = Calendar.getInstance();
     int flagCount = Integer.MAX_VALUE / 2;
@@ -41,7 +40,6 @@ public class CalendarLayout extends LinearLayout {
         adapter = new CalendarPagerAdapter();
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(Integer.MAX_VALUE / 2);
-        viewPager.setOffscreenPageLimit(-1);
         addView(viewPager);
 
         adapter.setOnClickListener(new MonthView.OnClickListener() {
@@ -67,7 +65,9 @@ public class CalendarLayout extends LinearLayout {
             public void onPageSelected(int position) {
                 int offset = position - flagCount;
                 calendar.add(Calendar.MONTH, offset);
-                Log.e(TAG, "position:" + position + " offset:" + offset);
+                MonthView monthView = (MonthView) viewPager.findViewWithTag(position);
+                monthView.setCurrentSelectedCount();
+                Log.e(TAG, "position:" + position + " offset:" + offset + "  selectedCount:" + MonthView.currentSelectedCount);
                 Log.e(TAG, calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH));
                 flagCount = position;
             }

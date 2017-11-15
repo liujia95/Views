@@ -34,6 +34,7 @@ public class CalendarPagerAdapter extends PagerAdapter {
         monthView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         int offset = position - flagCount;
         calendar.add(Calendar.MONTH, offset);
+        monthView.setTag(position);
         monthView.setDate(calendar.getTime());
         flagCount = position;
         monthView.setOnClickListener(listener);
