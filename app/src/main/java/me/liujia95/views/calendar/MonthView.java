@@ -74,10 +74,6 @@ public class MonthView extends View {
     }
 
     /**
-     * 重新梳理一遍点击事件的逻辑：
-     * 1、点击在本月内部，把currentSelectedCount赋值为当前点击的数字，是为了在滑动下一页的时候定位到这个数字
-     * 2、画圈的逻辑，点击本月的时候立马画圈，或者当前
-     *
      * @param canvas
      */
     @Override
